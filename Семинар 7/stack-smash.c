@@ -12,30 +12,22 @@ void print_users() {
   for (size_t i = 0; i < sizeof(users) / sizeof(struct user); i++) {
     printf("%s: %s\n", users[i].name, users[i].password);
   }
-  _Exit(EXIT_SUCCESS);
 }
 
-void fill(FILE *f, char *where, __int64 *size) {
+void fill(FILE *f, char *where) {
   size_t read_total = 0;
-  for (read_total = 0; read_total < size; read_total++) {
+  for (;;) {
     size_t read = fread(where + read_total, 1, 1, f);
     if (!read)
       break;
-    else {
-      if (read_total<size) {
-        read_total += read;
-      } else {
-        printf("Error");
-        _Exit(EXIT_FAILURE);
-      }
-    }
+    else
+      read_total += read;
   }
 }
 
 void vulnerable(FILE *f) {
   char buffer[8];
-  fill(f, buffer, 10);
-  print_users();
+  fill(f, buffer);
 }
 
 int main(int argc, char **argv) {
